@@ -1,3 +1,5 @@
+# restore_sessions
+
 so we might categorize these things.
 
 need internet versus no internet.
@@ -8,4 +10,4 @@ if has internet, we first check if it is properly working. if it can automatical
 
 if do not require internet, like temp-throttle, we only do it once.
 
-last, switch to target workspace(blank) since we will do things there.# restore_sessions
+last, switch to target workspace(blank) since we will do things there.
