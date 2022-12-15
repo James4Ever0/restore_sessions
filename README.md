@@ -1,4 +1,6 @@
-# restore_sessions
+# restore sessions
+
+mount disks first!
 
 so we might categorize these things.
 
