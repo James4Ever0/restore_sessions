@@ -264,10 +264,27 @@ def classScheduler(relaunch=True):
 # related services: rclone serve, filesystem watchdogs, filesystem syncdogs, watchdog configs, watchdog init disk mount, qqAutoChat (which is here)
 # you need to change the symlink destination of /root/Desktop/works/pyjom
 
+def qqAutoChatNeedRelaunch():
+    # check if the lock exists?
+    # at least for 30 seconds.
+    #import lazero
+    import lazero.network.checker
+    maxtime = 15
+    timeout = 1
+    port, message = 8932,{"response": "DFAFilter based Chinese text filter(censor)"}
+    # textfilter, one component of our chatbot.
+    flag = lazero.network.checker.waitForServerUp(port, message, timeout=timeout,maxtime=maxtime)
+    relaunch = not flag
+    if relaunch:
+        print("qq chatbot need relaunch!")
+        os.system("tmux kill-session -t qq_red_packet")
+    return relaunch
+
 while True:
     try:
-        tujiaScraper()
-        qqAutoChat()
+        # disable tujiaScraper
+        # tujiaScraper() 
+        qqAutoChat(relaunch=qqAutoChatNeedRelaunch())
         classScheduler()
         # switch to workspace id:2 from now? leave all other desktops to run our tasks.
         switchToDesktop(index=1, buffer=1)
@@ -294,12 +311,13 @@ def tryPass(function):
 while True:
     # check tempthrottle. do not exit or computer will blow.
     # tempThrottle(relaunch=True)
-    tujiaCompletedFlag = "/root/Desktop/works/tujia_beijing_scraping/export_beijing_xlsx/suzhou_processed.flag"
+    #tujiaCompletedFlag = "/root/Desktop/works/tujia_beijing_scraping/export_beijing_xlsx/suzhou_processed.flag"
     # do not check the tujia crawler since we don't give a shit to that.
-    if not os.path.exists(tujiaCompletedFlag):
-        tryPass(lambda:tujiaScraper(relaunch=True))
+    #if not os.path.exists(tujiaCompletedFlag):
+    #    tryPass(lambda:tujiaScraper(relaunch=True))
+    # disable tujiaScraper.
     # check our qq bot instead. if not running and have internet then we must relaunch that.
-    tryPass(lambda: qqAutoChat(relaunch=True))
+    tryPass(lambda: qqAutoChat(relaunch=qqAutoChatNeedRelaunch()))
     tryPass(lambda: classScheduler(relaunch=True))
 
     time.sleep(5)
